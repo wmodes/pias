@@ -1,0 +1,5 @@
+{
+    "data_dir" : "data/",
+    "log_options" : "CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET",
+    "log_level" : "ERROR"
+}

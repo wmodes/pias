@@ -1,0 +1,9 @@
+{
+    "audio_list" : [
+        "one.mp3",
+        "two.mp3",
+        "three.mp3"
+    ],
+    "log_options" : "CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET",
+    "log_level" : "DEBUG"
+}
