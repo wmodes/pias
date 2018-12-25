@@ -24,13 +24,21 @@ import pygame
 import time
 import curses
 
+# find out if we are running on the Raspi
+rpi_system = bool(re.search('machine=\'arm', str(os.uname())))
+if rpi_system:
+    log_format = '%(levelname)-8s %(message)s'
+else:
+    # cuz we are using curses, 
+    # we need to add carriage return (irritating, I know)
+    log_format = '%(levelname)-8s %(message)s\r'
+
 # setup
 logging.basicConfig(
     level=logging.DEBUG,
-    format='%(levelname)-8s %(message)s',
+    format=log_format,
 )
-# find out if we are running on the Raspi
-rpi_system = bool(re.search('machine=\'arm', str(os.uname())))
+
 logging.info("Running on pi: " + str(rpi_system))
 
 #constants
@@ -81,8 +89,8 @@ class CartPlayer(object):
             self.cart_list = self.__get_cart_list()
         self.cart_index = 0
         self.play_loop = False
-        logging.debug('Cart list:')
-        logging.debug(pformat(self.cart_list, indent=4, width=1))
+        cart_output = '\n\r'.join(self.cart_list)
+        logging.debug('Cart list:\n\r' + cart_output)
         pygame.mixer.init()
         pygame.mixer.music.set_volume(1.0)
 
@@ -138,6 +146,8 @@ class CartPlayer(object):
         if not rpi_system:
             if (scrn.getch() != -1):
                 self.play_loop = not self.play_loop
+        else:
+            self.play_loop = True
 
 
 def main():
@@ -153,7 +163,6 @@ if __name__ == '__main__':
         try:
             scrn = curses.initscr()
             curses.noecho()
-            curses.nonl()
             scrn.nodelay(True)
             main()
         except KeyboardInterrupt:
