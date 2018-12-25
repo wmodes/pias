@@ -174,9 +174,9 @@ class CartPlayer(object):
                 self.play_loop = not self.play_loop
         else:
             if gpio_button.is_pressed:
-                self.play_loop = False
-            else:
                 self.play_loop = True
+            else:
+                self.play_loop = False
 
 
 #
