@@ -153,6 +153,7 @@ if __name__ == '__main__':
         try:
             scrn = curses.initscr()
             curses.noecho()
+            curses.nonl()
             scrn.nodelay(True)
             main()
         except KeyboardInterrupt:
