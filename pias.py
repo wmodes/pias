@@ -31,7 +31,7 @@ logging.basicConfig(
     format='%(levelname)-8s %(message)s',
 )
 # find out if we are running on the Raspi
-rpi_system = bool(re.match('machine=\'arm', str(os.uname())))
+rpi_system = bool(re.search('machine=\'arm', str(os.uname())))
 logging.info("Running on pi: " + str(rpi_system))
 
 #constants
