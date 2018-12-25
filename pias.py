@@ -40,7 +40,8 @@ if rpi_system:
     )
     # import gpio handler
     from gpiozero import Button
-    gpio_button = Button(2)
+    # configure GPIO pin2 to test for ground
+    gpio_button = Button(2, bounce_time=0.1)
     logging.info("GPIO Button initiated")
 else:
     # set up logging
