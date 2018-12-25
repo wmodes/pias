@@ -18,12 +18,11 @@ import logging
 from pathlib import Path
 import json
 from pprint import pformat
-from os import listdir
-from os.path import isfile, join
+import os
 import re
 import pygame
 import time
-import os
+import curses
 
 # setup
 logging.basicConfig(
@@ -90,42 +89,55 @@ class CartPlayer(object):
     def __get_cart_list(self):
         logging.debug('No cart_list found. Looking in ' + self.path)
         cart_list = []
-        for file in listdir(self.path):
-            if re.match('^.*\.(mp3|wav)', file) and isfile(self.path + file):
+        for file in os.listdir(self.path):
+            if re.match('^.*\.(mp3|wav)', file) and \
+                    os.path.isfile(self.path + file):
                 cart_list.append(file)
         cart_list.sort()
         return cart_list
 
-    def play_audio(self, fn):
+    def __play_audio(self, fn):
+        """play audio and wait for completion
+
+        input: str -> filename (minus path)
+        returns: bool -> true if completed"""
         pygame.mixer.music.load(self.path + fn)
         pygame.mixer.music.play()
+        pygame.mixer.music.rewind()
         logging.debug("Audio started: " + fn)
         while (pygame.mixer.music.get_busy()):
-            # logging.debug("Still playing")
-            time.sleep(0.1)
             if not self.play_loop:
                 pygame.mixer.music.stop()
-                break
+                return False
+            time.sleep(0.2)
+            self.test_play_switch()
         logging.debug("Audio finished")
+        return True
 
-    def loop_cart(self):
+    def __loop_cart(self):
         """Loop through all of the audio in the cart_list"""
-        logging.debug('Starting loop')
         while (True):
-            self.play_audio(self.cart_list[self.cart_index])
-            if not self.play_loop:
-                break
-            self.cart_index += 1
-            if self.cart_index >= len(self.cart_list):
-                self.cart_index = 0
+            self.test_play_switch()
+            if self.play_loop:
+                # play audio and check if completed
+                if (self.__play_audio(self.cart_list[self.cart_index])):
+                    # if completed, increment index
+                    self.cart_index += 1
+                    if self.cart_index >= len(self.cart_list):
+                        self.cart_index = 0
+            time.sleep(0.2)
 
     def start_loop(self):
-        self.play_loop = True
-        self.loop_cart()
-
-    def stop_loop(self):
-        logging.debug('Stopped loop')
+        logging.debug('Starting loop')
         self.play_loop = False
+        self.__loop_cart()
+
+    def test_play_switch(self):
+        """Toggle switch to play audio"""
+        # different tests depending if we are on the Rpi or not
+        if not rpi_system:
+            if (scrn.getch() != -1):
+                self.play_loop = not self.play_loop
 
 
 def main():
@@ -135,4 +147,16 @@ def main():
     player.start_loop()
 
 if __name__ == '__main__':
-    main()
+    if rpi_system:
+        main()
+    else:
+        try:
+            scrn = curses.initscr()
+            curses.noecho()
+            scrn.nodelay(True)
+            main()
+        except KeyboardInterrupt:
+            scrn.clear()
+            scrn.refresh()
+            curses.nocbreak()
+            curses.endwin()
