@@ -22,18 +22,27 @@ import os
 import re
 import pygame
 import time
-import curses
+
+
+#
+# Setup
+#
 
 # find out if we are running on the Raspi
 rpi_system = bool(re.search('machine=\'arm', str(os.uname())))
+
+# setup some system dependent things
 if rpi_system:
+    from gpiozero import Button
+    gpio_button = Button(2)
     log_format = '%(levelname)-8s %(message)s'
 else:
+    import curses
     # cuz we are using curses, 
     # we need to add carriage return (irritating, I know)
     log_format = '%(levelname)-8s %(message)s\r'
 
-# setup
+
 logging.basicConfig(
     level=logging.DEBUG,
     format=log_format,
@@ -41,9 +50,16 @@ logging.basicConfig(
 
 logging.info("Running on pi: " + str(rpi_system))
 
-#constants
+#
+# Constants
+#
+
 config_master_filename = './config_master.json'
 config_ext_filename = 'config.json'
+
+#
+# Configuration
+#
 
 # get master config-master
 with open(config_master_filename, 'r') as f:
@@ -72,6 +88,10 @@ if config_file.is_file():
 logging.getLogger().setLevel(getattr(logging, config['log_level'].upper()))
 
 logging.info("Received configuration:\n" + json.dumps(config, indent=4))
+
+#
+# Classes
+#
 
 class CartPlayer(object):
     """responsible for sequencing and playing audio
@@ -147,8 +167,15 @@ class CartPlayer(object):
             if (scrn.getch() != -1):
                 self.play_loop = not self.play_loop
         else:
-            self.play_loop = True
+            if gpio_button.is_pressed:
+                self.play_loop = False
+            else:
+                self.play_loop = True
 
+
+#
+# Functions
+#
 
 def main():
     if 'cart_list' not in config:
