@@ -33,20 +33,25 @@ rpi_system = bool(re.search('machine=\'arm', str(os.uname())))
 
 # setup some system dependent things
 if rpi_system:
+    # set up logging
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format='%(levelname)-8s %(message)s',
+    )
+    # import gpio handler
     from gpiozero import Button
     gpio_button = Button(2)
-    log_format = '%(levelname)-8s %(message)s'
+    logging.info("GPIO Button initiated")
 else:
-    import curses
-    # cuz we are using curses, 
-    # we need to add carriage return (irritating, I know)
-    log_format = '%(levelname)-8s %(message)s\r'
-
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format=log_format,
-)
+    # set up logging
+    logging.basicConfig(
+        level=logging.DEBUG,
+        # cuz we are using curses, 
+        # we need to add carriage return
+        format='%(levelname)-8s %(message)s\r',
+    )
+    # import curses so we can catch keyboard input
+    import curses   
 
 logging.info("Running on pi: " + str(rpi_system))
 
