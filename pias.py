@@ -21,12 +21,18 @@ from pprint import pformat
 from os import listdir
 from os.path import isfile, join
 import re
+import pygame
+import time
+import os
 
 # setup
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(levelname)-8s %(message)s',
 )
+# find out if we are running on the Raspi
+rpi_system = bool(re.match('machine=\'arm', str(os.uname())))
+logging.info("Running on pi: " + str(rpi_system))
 
 #constants
 config_master_filename = './config_master.json'
@@ -74,8 +80,12 @@ class CartPlayer(object):
             self.cart_list = cart_list
         else:
             self.cart_list = self.__get_cart_list()
+        self.cart_index = 0
+        self.play_loop = False
         logging.debug('Cart list:')
         logging.debug(pformat(self.cart_list, indent=4, width=1))
+        pygame.mixer.init()
+        pygame.mixer.music.set_volume(1.0)
 
     def __get_cart_list(self):
         logging.debug('No cart_list found. Looking in ' + self.path)
@@ -85,13 +95,44 @@ class CartPlayer(object):
                 cart_list.append(file)
         cart_list.sort()
         return cart_list
-    
+
+    def play_audio(self, fn):
+        pygame.mixer.music.load(self.path + fn)
+        pygame.mixer.music.play()
+        logging.debug("Audio started: " + fn)
+        while (pygame.mixer.music.get_busy()):
+            # logging.debug("Still playing")
+            time.sleep(0.1)
+            if not self.play_loop:
+                pygame.mixer.music.stop()
+                break
+        logging.debug("Audio finished")
+
+    def loop_cart(self):
+        """Loop through all of the audio in the cart_list"""
+        logging.debug('Starting loop')
+        while (True):
+            self.play_audio(self.cart_list[self.cart_index])
+            if not self.play_loop:
+                break
+            self.cart_index += 1
+            if self.cart_index >= len(self.cart_list):
+                self.cart_index = 0
+
+    def start_loop(self):
+        self.play_loop = True
+        self.loop_cart()
+
+    def stop_loop(self):
+        logging.debug('Stopped loop')
+        self.play_loop = False
+
 
 def main():
     if 'cart_list' not in config:
         config['cart_list'] = []
     player = CartPlayer(config['data_dir'], config['cart_list'])
-    logging.info("Starting")
+    player.start_loop()
 
 if __name__ == '__main__':
     main()
