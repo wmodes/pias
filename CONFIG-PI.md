@@ -1,14 +1,13 @@
-# Configuring the Raspberry Pi
+# Configuring the Raspberry Pi with pygame and pHAT DAC
 
-I am using a Raspberry Pi Zero W with a Phat DAC hat for audio out, so these config will be tailored for that.
+I am using a Raspberry Pi Zero W with a pHAT DAC hat for audio out, so these config will be tailored for that.
 
 ## Write SD Card
 
 Downloaded Raspbian Stretch from https://www.raspberrypi.org/downloads/raspbian/
 
-    $ diskutil list
-    $ diskutil unmountDisk /dev/disk5
-    $ sudo dd if=2018-11-13-raspbian-stretch.img of=/dev/rdisk5 bs=1m
+    diskutil list
+    diskutil unmountDisk /dev/disk5
 
 ## Initial Configuration
 
@@ -33,4 +32,42 @@ Connect the leads of the serial cable as per the diagram on the above page.
 Test & Configure
 
 I was unable to do this because the serial drivers didn't seem to be working with MacOS Mojave.
+
+## Update your Raspberry Pi
+
+    sudo apt-get update
+    sudo apt-get upgrade
+    sudo reboot
+
+## Backup SD Card
+
+It can be useful to backup your SD Card at this point, in case you hose it somehow.
+
+    diskutil list
+    diskutil unmountDisk /dev/disk5
+    sudo dd if=/dev/rdisk5 bs=1m | gzip > 2018-11-13-raspbian-python3-6.img.gz
+
+Later if need be, you can restore this image to the card:
+
+    diskutil unmountDisk /dev/disk5
+    gzip -dc 2018-11-13-raspbian-python3-6.img.gz | sudo dd of=/dev/rdisk5 bs=1m
+
+## Install pygame
+
+    sudo apt-get install python3-pygame
+
+## Setup pHAT DAC
+
+Ref: https://learn.pimoroni.com/tutorial/phat/raspberry-pi-phat-dac-install
+
+    curl https://get.pimoroni.com/phatdac | bash
+
+And then we test:
+
+    cd pias/experiments
+    python3 pygame-test.py
+
+You should hear audio through the pHAT DAC external audio port.
+
+
 
