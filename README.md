@@ -48,7 +48,7 @@ You should hear audio through the pHAT DAC external audio port.
 
 Connect your normally open switch to Ground at pin 6 and GPIO2/SDA1 12C at pin 3.
 
-![Attach switch to pins 3 and 6](https://github.com/wmodes/pias/images/rpi-and-phat-dac.png "Attach switch to pins 3 and 6")
+![Attach switch to pins 3 and 6](https://raw.githubusercontent.com/wmodes/pias/master/images/rpi-and-phat-dac.png "Attach switch to pins 3 and 6")
 
 ## Test script
 
