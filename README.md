@@ -24,7 +24,7 @@ By default the script will look for a file in the run directory called config.js
 
 ## Setup and Configure Raspberry Pi
 
-See CONFIG-pi.md for full hints on preparing your Rpi
+See [CONFIG-pi.md](https://github.com/wmodes/pias/blob/master/CONFIG-PI.md) for full hints on preparing your Rpi
 
 ## Clone Repository
 
