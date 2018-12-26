@@ -1,0 +1,4 @@
+# Add to /etc/rc.local
+
+# start pias script
+/usr/bin/python /home/pi/pias/pias.py &>> /var/log/pias.log

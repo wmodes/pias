@@ -60,7 +60,7 @@ logging.info("Running on pi: " + str(rpi_system))
 # Constants
 #
 
-config_master_filename = './config_master.json'
+config_master_filename = '/home/pi/pias/config_master.json'
 config_ext_filename = 'config.json'
 
 #
