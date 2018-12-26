@@ -106,7 +106,7 @@ class CartPlayer(object):
         path: full path to audio files
         cart_list (optional): a list of filenames to be played
         """
-    def __init__(self, path, cart_list=[]):
+    def __init__(self, path, cart_list=[], transition=""):
         # super(ClassName, self).__init__()
         self.path = path
         if cart_list:
@@ -114,11 +114,16 @@ class CartPlayer(object):
         else:
             self.cart_list = self.__get_cart_list()
         self.cart_index = 0
-        self.play_loop = False
-        cart_output = '\n\r'.join(self.cart_list)
-        logging.debug('Cart list:\n\r' + cart_output)
+        # setup pygame audio
         pygame.mixer.init()
         pygame.mixer.music.set_volume(1.0)
+        # setup transition
+        self.transition = transition
+        if (self.transition):
+            self.__setup_transition(self.transition)
+        cart_output = '\n\r'.join(self.cart_list)
+        logging.debug('Cart list:\n\r' + cart_output)
+        self.play_loop = False
 
     def __get_cart_list(self):
         logging.debug('No cart_list found. Looking in ' + self.path)
@@ -129,6 +134,15 @@ class CartPlayer(object):
                 cart_list.append(file)
         cart_list.sort()
         return cart_list
+
+    def __setup_transition(self, fn):
+        # use pygame sound object to keep sound loaded
+        pass
+
+    def __play_transition(self):
+        # borrow code from __play_audio
+        if self.transition:
+            self.__play_audio(self.transition)
 
     def __play_audio(self, fn):
         """play audio and wait for completion
@@ -153,6 +167,7 @@ class CartPlayer(object):
         while (True):
             self.test_play_switch()
             if self.play_loop:
+                self.__play_transition()
                 # play audio and check if completed
                 if (self.__play_audio(self.cart_list[self.cart_index])):
                     # if completed, increment index
@@ -186,7 +201,8 @@ class CartPlayer(object):
 def main():
     if 'cart_list' not in config:
         config['cart_list'] = []
-    player = CartPlayer(config['data_dir'], config['cart_list'])
+    player = CartPlayer(config['data_dir'], cart_list=config['cart_list'],
+                transition=config['transition'])
     player.start_loop()
 
 if __name__ == '__main__':
