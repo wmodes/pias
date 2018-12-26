@@ -1,10 +1,13 @@
 {
-    "cart_listx" : [
-        "one.mp3",
-        "two.mp3",
-        "three.mp3"
+    "cart_list" : [
+        "01_test.mp3",
+        "02_test.mp3",
+        "03_test.mp3",
+        "04_test.mp3",
+        "05_test.mp3"
     ],
     "log_options" : "CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET",
     "log_level" : "DEBUG",
-    "transition" : "machine_beep.wav"
+    "transition" : "beep_with_noisy_silent_tail.wav",
+    "delay" : 0
 }
