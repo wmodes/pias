@@ -21,18 +21,6 @@ Boot the Raspi and do the following:
 1. Enable Serial (also under Interfacing Options)
 1. Reboot
 
-## Enable Serial Connection
-
-Ref: https://learn.adafruit.com/adafruits-raspberry-pi-lesson-5-using-a-console-cable/overview
-
-You already enabled Serial logon in the last step. Now install the appropriate driver for your desktop/laptop.
-
-Connect the leads of the serial cable as per the diagram on the above page.
-
-Test & Configure
-
-I was unable to do this because the serial drivers didn't seem to be working with MacOS Mojave.
-
 ## Update your Raspberry Pi
 
     sudo apt-get update
@@ -55,19 +43,5 @@ Later if need be, you can restore this image to the card:
 ## Install pygame
 
     sudo apt-get install python3-pygame
-
-## Setup pHAT DAC
-
-Ref: https://learn.pimoroni.com/tutorial/phat/raspberry-pi-phat-dac-install
-
-    curl https://get.pimoroni.com/phatdac | bash
-
-And then we test:
-
-    cd pias/experiments
-    python3 pygame-test.py
-
-You should hear audio through the pHAT DAC external audio port.
-
 
 
