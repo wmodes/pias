@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """pias - a Raspberry Pi Audio Sequencer
 
 This python3 script takes a collection of audio files and plays them in sequence, looping infinitely, paused or resumed by input on the Pi's GPIO pins.
@@ -191,11 +190,17 @@ class CartPlayer(object):
             if self.play_loop:
                 self.__play_transition()
                 # play audio and check if completed
-                if (self.__play_audio(self.cart_list[self.cart_index])):
-                    # if completed, increment index
-                    self.cart_index += 1
-                    if self.cart_index >= len(self.cart_list):
-                        self.cart_index = 0
+                # if (self.__play_audio(self.cart_list[self.cart_index])):
+                #     # if completed, increment index
+                #     self.cart_index += 1
+                #     if self.cart_index >= len(self.cart_list):
+                #         self.cart_index = 0
+                # play audio and increment counter no matter what
+                self.__play_audio(self.cart_list[self.cart_index])
+                # if completed, increment index
+                self.cart_index += 1
+                if self.cart_index >= len(self.cart_list):
+                    self.cart_index = 0
             time.sleep(0.2)
 
     def start_loop(self):
