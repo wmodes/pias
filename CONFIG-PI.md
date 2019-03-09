@@ -4,10 +4,12 @@ I am using a Raspberry Pi Zero W with a pHAT DAC hat for audio out, so these con
 
 ## Write SD Card
 
+Before buying SD Cards, check the compatibility of current Raspbian release here: https://elinux.org/RPi_SD_cards
+
 Downloaded Raspbian Stretch from https://www.raspberrypi.org/downloads/raspbian/
 
     diskutil list
-    diskutil unmountDisk /dev/disk5
+    diskutil unmountDisk /dev/disk2
 
 ## Initial Configuration
 
@@ -32,13 +34,14 @@ Boot the Raspi and do the following:
 It can be useful to backup your SD Card at this point, in case you hose it somehow.
 
     diskutil list
-    diskutil unmountDisk /dev/disk5
-    sudo dd if=/dev/rdisk5 bs=1m | gzip > 2018-11-13-raspbian-python3-6.img.gz
+    diskutil unmountDisk /dev/disk2
+    sudo dd if=/dev/rdisk2 bs=4m | gzip > 2019-02-25-raspbian-python3-6.img.gz
 
 Later if need be, you can restore this image to the card:
 
-    diskutil unmountDisk /dev/disk5
-    gzip -dc 2018-11-13-raspbian-python3-6.img.gz | sudo dd of=/dev/rdisk5 bs=1m
+    diskutil unmountDisk /dev/disk2
+    gzip -dc 2019-02-25-raspbian-python3-6.img.gz | sudo dd of=/dev/rdisk2 bs=4m
+    diskutil eject /dev/disk2
 
 ## Install pygame
 
