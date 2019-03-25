@@ -1,11 +1,12 @@
 {
-    "cart_list" : [
+    "xcart_list" : [
         "01_test.mp3",
         "02_test.mp3",
         "03_test.mp3",
         "04_test.mp3",
         "05_test.mp3"
     ],
+    "sort" : "random",
     "log_options" : "CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET",
     "log_level" : "DEBUG",
     "transition" : "beep_with_noisy_silent_tail.wav",

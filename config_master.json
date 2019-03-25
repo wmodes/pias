@@ -1,5 +1,6 @@
 {
     "data_dir" : "/home/pi/pias/data/",
     "log_options" : "CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET",
-    "log_level" : "ERROR"
+    "log_level" : "ERROR",
+    "sort" : "natural"
 }

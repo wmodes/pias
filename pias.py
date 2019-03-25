@@ -1,8 +1,4 @@
-"""pias - a Raspberry Pi Audio Sequencer
 
-This python3 script takes a collection of audio files and plays them in sequence, looping infinitely, paused or resumed by input on the Pi's GPIO pins.
-
-The script is useful in museum or gallery settings where a small microprocessor is required to generate a looped audio sequence."""
 
 __author__ = "Wes Modes"
 __copyright__ = "Copyright 2018, Wes Modes"
@@ -21,6 +17,7 @@ import os
 import re
 import pygame
 import time
+from random import shuffle
 
 
 #
@@ -89,7 +86,7 @@ if config_file.is_file():
     config = {**config, **config_ext}
 # list of configuation options   
 config_opts = ["data_dir", "log_options", "log_level", "cart_list", 
-    "transition", "delay"]
+    "transition", "delay", "sort"]
 # making sure we don't reference an option that is not there
 for opt in config_opts:
     if opt not in config:
@@ -112,13 +109,14 @@ class CartPlayer(object):
         path: full path to audio files
         cart_list (optional): a list of filenames to be played
         """
-    def __init__(self, path, cart_list=[], transition="", delay=0):
+    def __init__(self, path, cart_list=[], transition="", delay=0, sort="alpha"):
         # super(ClassName, self).__init__()
         self.path = path
         self.cart_index = 0
         self.transition = transition
         self.delay = delay
         self.play_loop = False
+        self.sort = sort
         if cart_list:
             # save cart list
             self.cart_list = cart_list
@@ -128,6 +126,11 @@ class CartPlayer(object):
             # remove transition from cart list
             if self.transition in self.cart_list:
                  self.cart_list.remove(self.transition)
+        # sort
+        if self.sort = "alpha":
+            self.cart_list = self.cart_list.sort()
+        elif self.sort = "random":
+            shuffle(self.cart_list)
         # setup pygame audio
         pygame.mixer.init()
         pygame.mixer.music.set_volume(1.0)
@@ -228,7 +231,8 @@ class CartPlayer(object):
 def main():
 
     player = CartPlayer(config['data_dir'], cart_list=config['cart_list'],
-                transition=config['transition'], delay=config['delay'])
+                transition=config['transition'], delay=config['delay'], 
+                sort=config['sort'])
     player.start_loop()
 
 if __name__ == '__main__':
