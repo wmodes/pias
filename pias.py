@@ -109,7 +109,7 @@ class CartPlayer(object):
         path: full path to audio files
         cart_list (optional): a list of filenames to be played
         """
-    def __init__(self, path, cart_list=[], transition="", delay=0, sort="alpha"):
+    def __init__(self, path, cart_list=[], transition="", delay=0, sort="natural"):
         # super(ClassName, self).__init__()
         self.path = path
         self.cart_index = 0
