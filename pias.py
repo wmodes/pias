@@ -127,9 +127,9 @@ class CartPlayer(object):
             if self.transition in self.cart_list:
                  self.cart_list.remove(self.transition)
         # sort
-        if self.sort = "alpha":
+        if self.sort == "alpha":
             self.cart_list = self.cart_list.sort()
-        elif self.sort = "random":
+        elif self.sort == "random":
             shuffle(self.cart_list)
         # setup pygame audio
         pygame.mixer.init()
